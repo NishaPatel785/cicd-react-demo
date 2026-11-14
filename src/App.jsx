@@ -1,81 +1,192 @@
+
 import { useEffect, useState } from 'react'
 import './App.css'
 
-// ✏️ Change these to your own details
+// Change these to your own details
 const PROJECT = {
   name: 'CI/CD Project',
-  repo: 'https://github.com/your-username/your-repo',
-  live: 'https://your-app.vercel.app',
-  author: 'Your Name',
+  repo: 'https://github.com/NishaPatel785/cicd-react-demo',
+  live: 'https://cicd-react-demo-y4lx.vercel.app/',
+  author: 'Nisha Patel',
 }
 
 const STAGES = [
-  { name: 'Commit', note: 'Code pushed to main', logs: ['$ git push origin main', 'GitHub received 1 commit'] },
-  { name: 'Build', note: 'Install and bundle', logs: ['$ npm ci', '$ npm run build', 'Built in 2.1s'] },
-  { name: 'Test', note: 'Lint and check', logs: ['$ npm run lint', 'All checks passed'] },
-  { name: 'Deploy', note: 'Released on Vercel', logs: ['Deploying to Vercel', 'Live at ' + PROJECT.live.replace('https://', '')] },
+  {
+    name: 'Push to GitHub',
+    note: 'Code pushed to develop branch',
+    logs: [
+      '$ git add .',
+      '$ git commit -m "Update project"',
+      '$ git push origin develop',
+      'Code pushed successfully',
+    ],
+  },
+  {
+    name: 'Install Dependencies',
+    note: 'GitHub Actions installs packages',
+    logs: [
+      '$ npm ci',
+      'Dependencies installed successfully',
+    ],
+  },
+  {
+    name: 'Build',
+    note: 'Check and build React application',
+    logs: [
+      '$ npm run build',
+      'React application built successfully',
+      'Build completed',
+    ],
+  },
+  {
+    name: 'Preview Deploy',
+    note: 'Vercel creates a preview deployment',
+    logs: [
+      'Deploying develop branch to Vercel',
+      'Preview deployment ready',
+    ],
+  },
+  {
+    name: 'Merge to Main',
+    note: 'Approved code merged into main',
+    logs: [
+      '$ git checkout main',
+      '$ git merge develop',
+      '$ git push origin main',
+      'Production code updated',
+    ],
+  },
+  {
+    name: 'Production Deploy',
+    note: 'Vercel deploys the main branch',
+    logs: [
+      'Deploying main branch to Vercel',
+      'Production deployment ready',
+      'Live website updated',
+    ],
+  },
 ]
 
 const STEPS = [
-  ['You push code', 'A commit to GitHub is the only manual step.'],
-  ['The pipeline runs', 'The project is installed, built and checked automatically.'],
-  ['Vercel goes live', 'If every check passes, the new version replaces the old one.'],
+  [
+    'Develop',
+    'Write and update code in the develop branch.',
+  ],
+  [
+    'Push to GitHub',
+    'Push your changes to GitHub to trigger the workflow.',
+  ],
+  [
+    'Continuous Integration (CI)',
+    'GitHub Actions installs dependencies using npm ci and builds the React app using npm run build.',
+  ],
+  [
+    'Preview Deployment',
+    'Vercel creates a preview deployment so changes can be checked before production.',
+  ],
+  [
+    'Merge to Main',
+    'After testing, merge the develop branch into main.',
+  ],
+  [
+    'Continuous Deployment (CD)',
+    'Vercel automatically deploys the updated main branch to your live website.',
+  ],
 ]
 
-const STACK = ['React', 'Vite', 'GitHub', 'Vercel']
+const STACK = ['React', 'Vite', 'Git', 'GitHub', 'GitHub Actions', 'Vercel']
 
 const reduceMotion =
-  typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  typeof window !== 'undefined' &&
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
 function App() {
   const [done, setDone] = useState(reduceMotion ? STAGES.length : 0)
 
   useEffect(() => {
     if (done >= STAGES.length) return
+
     const t = setTimeout(() => setDone((d) => d + 1), 1200)
     return () => clearTimeout(t)
   }, [done])
 
   const finished = done >= STAGES.length
-  const status = (i) => (i < done ? 'done' : i === done ? 'active' : 'pending')
-  const logs = STAGES.slice(0, Math.min(done + 1, STAGES.length)).flatMap((s) => s.logs)
+
+  const status = (i) =>
+    i < done ? 'done' : i === done ? 'active' : 'pending'
+
+  const logs = STAGES
+    .slice(0, Math.min(done + 1, STAGES.length))
+    .flatMap((s) => s.logs)
 
   return (
     <div className="page">
       <header className="top">
         <span className="brand">{PROJECT.name}</span>
+
         <nav>
-          <a href={PROJECT.repo} target="_blank" rel="noreferrer">GitHub</a>
-          <a href={PROJECT.live} target="_blank" rel="noreferrer">Live site</a>
+          <a href={PROJECT.repo} target="_blank" rel="noreferrer">
+            GitHub
+          </a>
+          <a href={PROJECT.live} target="_blank" rel="noreferrer">
+            Live site
+          </a>
         </nav>
       </header>
 
       <main>
         <section className="hero">
-          <h1>Push code.<br />It ships itself.</h1>
+          <h1>
+            Push code.
+            <br />
+            It ships itself.
+          </h1>
+
           <p className="lead">
-            A React app with an automated pipeline: every push to GitHub is built, checked and
-            deployed to Vercel without anyone clicking a button.
+            A React application with an automated CI/CD pipeline.
+            GitHub Actions installs dependencies and builds the application,
+            while Vercel handles preview and production deployments.
           </p>
+
           <div className="actions">
-            <a className="btn primary" href={PROJECT.repo} target="_blank" rel="noreferrer">View the code</a>
-            <a className="btn" href={PROJECT.live} target="_blank" rel="noreferrer">Open live site</a>
+            <a
+              className="btn primary"
+              href={PROJECT.repo}
+              target="_blank"
+              rel="noreferrer"
+            >
+              View the code
+            </a>
+
+            <a
+              className="btn"
+              href={PROJECT.live}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Open live site
+            </a>
           </div>
         </section>
 
         <section className="run" aria-label="Pipeline run">
           <div className="run-head">
-            <h2>Latest run</h2>
+            <h2>Pipeline Demo</h2>
+
             <span className={'badge ' + (finished ? 'ok' : 'busy')}>
-              {finished ? 'Passed' : 'Running'}
+              {finished ? 'Completed' : 'Running'}
             </span>
           </div>
 
           <ol className="pipeline">
             {STAGES.map((s, i) => (
               <li key={s.name} className={'stage ' + status(i)}>
-                <span className="node" aria-hidden="true">{i < done ? '✓' : ''}</span>
+                <span className="node" aria-hidden="true">
+                  {i < done ? '✓' : ''}
+                </span>
+
                 <span className="stage-name">{s.name}</span>
+
                 <span className="stage-note">{s.note}</span>
               </li>
             ))}
@@ -83,18 +194,33 @@ function App() {
 
           <pre className="terminal" aria-label="Pipeline log">
             {logs.map((l, i) => (
-              <span key={i} className={l.startsWith('$') ? 'cmd' : 'out'}>{l + '\n'}</span>
+              <span
+                key={i}
+                className={l.startsWith('$') ? 'cmd' : 'out'}
+              >
+                {l + '\n'}
+              </span>
             ))}
-            {finished && <span className="success">Deployment complete</span>}
+
+            {finished && (
+              <span className="success">
+                CI/CD demo completed successfully
+              </span>
+            )}
           </pre>
 
-          <button className="btn replay" onClick={() => setDone(0)} disabled={!finished}>
+          <button
+            className="btn replay"
+            onClick={() => setDone(0)}
+            disabled={!finished}
+          >
             Run again
           </button>
         </section>
 
         <section className="how">
-          <h2>What happens on every push</h2>
+          <h2>How the CI/CD pipeline works</h2>
+
           <ol>
             {STEPS.map(([title, text]) => (
               <li key={title}>
@@ -107,15 +233,21 @@ function App() {
 
         <section className="stack">
           <h2>Built with</h2>
+
           <ul>
-            {STACK.map((t) => <li key={t}>{t}</li>)}
+            {STACK.map((t) => (
+              <li key={t}>{t}</li>
+            ))}
           </ul>
         </section>
       </main>
 
       <footer>
         <span>Made by {PROJECT.author}</span>
-        <a href={PROJECT.repo} target="_blank" rel="noreferrer">Source on GitHub</a>
+
+        <a href={PROJECT.repo} target="_blank" rel="noreferrer">
+          Source on GitHub
+        </a>
       </footer>
     </div>
   )
